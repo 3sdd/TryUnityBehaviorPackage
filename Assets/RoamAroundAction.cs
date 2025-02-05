@@ -7,17 +7,16 @@ using UnityEngine.AI;
 using System.Collections.Generic;
 
 [Serializable, GeneratePropertyBag]
-[NodeDescription(name: "Roam Around", story: "[Agent] Roam Around using [WaypointContainer]", category: "Action", id: "d2f630619d5835deb055469fc2bb6c29")]
+[NodeDescription(name: "Roam Around", story: "[Agent] Roam Around using [WaypointContainer] and [TextOnReach]", category: "Action", id: "d2f630619d5835deb055469fc2bb6c29")]
 public partial class RoamAroundAction : Action
 {
     [SerializeReference] public BlackboardVariable<NavMeshAgent> Agent;
     [SerializeReference] public BlackboardVariable<WaypointContainer> WaypointContainer;
-
+    [SerializeReference] public BlackboardVariable<string> TextOnReach;
     Waypoint _targetWaypoint;
     protected override Status OnStart()
     {
         Debug.Log("[myaction]on start");
-        Debug.Log(Agent.Value.name);
         SetRandomDestination();
         return Status.Running;
     }
@@ -32,11 +31,12 @@ public partial class RoamAroundAction : Action
 
     protected override Status OnUpdate()
     {
-        Debug.Log("[myaction]on update");
+        // Debug.Log("[myaction]on update");
 
         if (Vector3.Distance(Agent.Value.transform.position, Agent.Value.destination) <= Agent.Value.stoppingDistance)
         {
             Debug.Log("[myaction] waypoint reached");
+            Debug.Log(TextOnReach.Value);
             SetRandomDestination();
 
             
