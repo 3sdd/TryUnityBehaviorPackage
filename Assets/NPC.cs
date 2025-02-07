@@ -7,7 +7,7 @@ public class NPC : MonoBehaviour
     BehaviorGraphAgent _behaviorAgent;
 
     BlackboardVariable<string> _behaviorAgentMyString;
-    BlackboardVariable<string> _behaviorAgentEventChannel;
+    BlackboardVariable<MyNewEventChannel> _behaviorAgentEventChannel;
 
     private void Awake()
     {
@@ -21,7 +21,7 @@ public class NPC : MonoBehaviour
         {
             StartNpc();
 
-            Debug.Log("MyString at start: " + _behaviorAgentMyString.Value);
+            Debug.Log("[c#]MyString at start: " + _behaviorAgentMyString.Value);
         }
 
         if (Input.GetKeyDown(KeyCode.A))
@@ -42,7 +42,10 @@ public class NPC : MonoBehaviour
         {
             _behaviorAgentMyString.OnValueChanged += OnMyStringValueChanged;
         }
-
+        if(_behaviorAgent.BlackboardReference.GetVariable("MyNewEventChannel",out _behaviorAgentEventChannel)){
+            // ???? channel.Value.Event に登録してdisableでは、onvaluechangeから解除するの正しい？
+            _behaviorAgentEventChannel.Value.Event += HandleEvent;
+        }
     }
 
     void OnDisable()
@@ -50,6 +53,11 @@ public class NPC : MonoBehaviour
         if (_behaviorAgentMyString != null)
         {
             _behaviorAgentMyString.OnValueChanged -= OnMyStringValueChanged;
+        }
+        if(_behaviorAgentEventChannel!=null){
+            Debug.Log("ondisable");
+            // _behaviorAgentEventChannel.OnValueChanged-=HandleEvent;
+            _behaviorAgentEventChannel.Value.Event-=HandleEvent;
         }
     }
 
@@ -61,6 +69,12 @@ public class NPC : MonoBehaviour
     void OnMyStringValueChanged()
     {
         var newValue = _behaviorAgentMyString.Value;
-        Debug.Log("OnMyStringValueChanged called: " + newValue);
+        Debug.Log("[c#]OnMyStringValueChanged called: " + newValue);
+    }
+
+
+    void HandleEvent(string myText){
+        
+        Debug.Log("[c#]my text:"+myText);
     }
 }
