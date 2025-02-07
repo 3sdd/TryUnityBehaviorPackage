@@ -7,6 +7,7 @@ public class NPC : MonoBehaviour
     BehaviorGraphAgent _behaviorAgent;
 
     BlackboardVariable<string> _behaviorAgentMyString;
+    BlackboardVariable<string> _behaviorAgentEventChannel;
 
     private void Awake()
     {
@@ -20,7 +21,15 @@ public class NPC : MonoBehaviour
         {
             StartNpc();
 
-            Debug.Log("MyString at start: "+_behaviorAgentMyString.Value);
+            Debug.Log("MyString at start: " + _behaviorAgentMyString.Value);
+        }
+
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            if (_behaviorAgentMyString != null)
+            {
+                _behaviorAgentMyString.Value = "value from c#";
+            }
         }
     }
 
@@ -33,6 +42,7 @@ public class NPC : MonoBehaviour
         {
             _behaviorAgentMyString.OnValueChanged += OnMyStringValueChanged;
         }
+
     }
 
     void OnDisable()
@@ -50,7 +60,7 @@ public class NPC : MonoBehaviour
 
     void OnMyStringValueChanged()
     {
-        var newValue=_behaviorAgentMyString.Value;
-        Debug.Log("OnMyStringValueChanged called: "+newValue);
+        var newValue = _behaviorAgentMyString.Value;
+        Debug.Log("OnMyStringValueChanged called: " + newValue);
     }
 }
